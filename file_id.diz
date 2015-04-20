@@ -1,0 +1,12 @@
+*Z*Crypt 0.31 - Random File Encryption.
+*Z*Crypt is a binary file de/encryption
+program designed to remove any trace of
+the original nature of the original files
+once encrypted. Fast encryption, output
+files are assigned random filenames.
+Original filenames are recovered with
+password when decrypted. The same file
+encrypted with the same password will
+appear completely different if examined.
+CRC integrity checks maintained. Freeware
+for OS/2 and DOS.

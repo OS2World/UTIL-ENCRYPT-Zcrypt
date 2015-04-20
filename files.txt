@@ -1,0 +1,7 @@
+                         *Z*Crypt Distibution Files
+
+                   zc.exe - OS/2 version of *Z*Crypt
+                  zcd.exe - DOS version of *Z*Crypt
+               zcrypt.txt - *Z*Crypt documentation
+             srczc031.zip - OS/2 and DOS Pascal source code
+                            (a subdirectory for each)

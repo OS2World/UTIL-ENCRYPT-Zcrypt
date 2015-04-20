@@ -1,0 +1,209 @@
+                           *Z*Crypt Documentation
+                             (for OS/2 and Dos)
+                                version 0.3
+
+Contents:
+    1 * What is *Z*Crypt?
+    2 * How Does *Z*Crypt Work?
+    3 * Command Line Operation
+    4 * Examples of Usage
+    5 * Warnings, Cautions, and Considerations.
+    6 * Program Source Code
+    7 * Email Address
+
+
+                            1 * What is *Z*Crypt?
+
+*Z*Crypt is a binary file encryption program designed to meet some very
+specific objectives. Those objectives are: Speed, Size, Security,
+Simplicity, and Anonymity. (Anonymity being its unique feature.)
+
+*Z*Crypt has OS/2 and DOS versions which are identical in operation.
+
+*Z*Crypt is different then other file encryption programs mainly due to it's
+"anonymity" objectives. The driving concept behind *Z*crypt was to create a
+scheme whereby when the selected files have been encrypted there remains
+absolutely no clue as to that file's original identity or purpose. There are
+two reasons for this.
+
+The first reason is for the sake of privacy concerns. A person may encrypt
+files with another file encryption scheme securely, but if the file name or
+extension is identifiable then others may be able to discern what 'types' of
+files are being encrypted, which could arouse unwanted curiosities or
+suspicions. Similarly, most other file encryption programs leave
+identifiable 'signatures' in the encrypted file so the decryption routines
+can positively identify the file as being encrypted by it. *Z*Crypt leaves
+absolutely no identifiable header of any kind in it's encrypted files (more
+details on the implications of this later). It is up to you to know which
+files you have encrypted.
+
+The second reason for 'anonymity' is that leaving clues as to the 'type' of
+file that has been encrypted is a major foothold for any would-be hacker.
+Using known patterns that may exist in known formats of known 'types' of
+files (even known types of encryption) is a common starting point for
+cracking open encrypted files. *Z*Crypt leaves no such vestiges.
+
+A very peculiar feature of *Z*Crypt is that you can encrypt a two (or more)
+copies of the same file using the same encryption password and the resulting
+encrypted files will be appear completely different inside when viewed with
+a binary file viewer. How this is achieved is explained below.
+
+
+                         2 * How Does *Z*Crypt Work?
+
+*Z*Crypt encrypts files overwriting them as it goes. There are no backups
+made by *Z*Crypt. If you need a backup then it is up to you to back it up
+yourself. Any interruption to the encryption process will result in an
+unrecoverably corrupt file.
+
+*Z*Crypt renames encrypted files to a random name, optionally beginning with
+a prefix you supply. When *Z*Crypt decrypts a file it will automatically
+rename the encrypted file back to it's original name.
+
+*Z*Crypt uses CRC checks to inform you if an encrypted file has been changed
+or corrupted in any way.
+
+*Z*Crypt encrypts all header information using the key generated from the
+password you supply, so there is no way to access this information without
+the correct password. *Z*crypt does not store the password anywhere, in any
+form, inside the encrypted file. It is up to you to remember your password.
+Encrypted files can not be recovered if the password is forgotten.
+
+*Z*Crypt embeds random numbers at certain points in the encrypted file. These
+random numbers are used in conjunction with the key that is generated based
+on your password to provide a truly random appearing encrypted file every
+time. Copies of the same file can be encrypted numerous times using the same
+password and the only similarity each file will have is they will all have
+the same resulting file size.
+
+*Z*Crypt generates variable length keys based on the password you supply.
+
+*Z*Crypt automatically determines if a file has been encrypted by attempting
+to decrypt the header information based on the password you supply combined
+with embedded random numbers.
+
+*Z*Crypt requires virtually no free disk space to encrypt a file due to its
+overwriting of the original file as it goes.
+
+
+                         3 * Command Line Operation
+
+*Z*Crypt is a command line oriented utility. There are two different command
+line structures (with some limitations: please read the next section to find
+out what they are). You may use an "ordered" command line structure where
+the parameters are given in a certain order and command line 'switches' are
+not needed. Alternately you can use an "unordered" command line structure
+where you can supply the command line parameters in any order using command
+line 'switches'.
+
+Method 1 (ordered):    ZC <filename> <password> [prefix] [other switches]
+Method 2 (unordered):  ZC <filename> /P<pass> [/F<prefix>] [other switches]
+
+Essential Command Line Information:
+----------------------------------
+<filename> = the filename of the file to encrypt or decrypt
+<password> = the password used to encrypt or decrypt the file.
+             the password is CASE SENSITIVE. (Do not forget your password!)
+
+Optional Command Line Information:
+---------------------------------
+[prefix]   = if an optional prefix is specified then it will be used
+             as the beginning characters for an encrypted random filename.
+             See examples below for more information.
+[/T]       = the /T switch puts ZC in "test" mode. If used on an encrypted
+             file it will check the CRC's and report if the encrypted file
+             is valid and uncorrupted. No actual decryption is done.
+[/I]       = the /I switch puts ZC in "identify" mode. This mode simply
+             uses the password to check if a file is encrypted. If it is
+             encrypted it will then report the true filename of the file.
+[/L<filename>] = if the /L switch is used along with a filename then all
+             actions taken by ZC will be logged to that file. The log
+             information notes the time and date and encrypted and
+             decrypted filenames of the operation done. If you want to
+             log all the time by default you can hack the ZC.EXE file:
+             look for a field of 30 (or more) @ characters. Enter your
+             full path and filename of a log file over top of them,
+             leaving the filename padded with any extra @'s at the end.
+             (if you don't know what I mean here, email me, or forget it).
+[/?]       = Will display a short help file.
+
+
+                          4 * Examples of Usage
+
+To demonstrate the difference between 'ordered' and 'unordered' the following
+command lines do the same thing:
+
+    ZC testfile.zip PassWord tf /Lzc.log
+    ZC /PPassWord /Lzc.log testfile.zip /Ftf
+    ZC /Lzc.log testfile.zip /Ftf /PPassWord
+
+
+                  5 * Warnings, Cautions, and Considerations.
+
+The most important thing is NEVER forget your password! Passwords are case
+sensitive (nothing else in *Z*crypt is). A password of "SomeThing" is
+different from a password of "somethinG".
+
+Due to bad design if you are encrypting using a wildcard pattern and assign
+a prefix for your random filename output which has the same letters as the
+files being encrypted unpredictable results may occur (your file may encrypt
+and then decrypt itself right away. For example:
+
+    ZC test* PassWord test
+
+In the above example the filename may be "testfile" and the output file
+name will be generated prefixed by "test". The random filename might be
+"testxifa". The file system then still looking for wildcards matching
+"test*" may (or may not) see the new "testxifa" file and decrypt it.
+
+*Z*Crypt is designed to overwrite the file it is working on as it goes.
+Therefore if you somehow abort a file in the middle of it's de/encryption
+operation there is no way to recover that file-- it is hopelessly lost
+half encrypted/decrypted. Hopefully this should not pose any problems
+in 99.9% of circumstances, but you should be aware. If you want to be
+extra safe you should make a backup copy of the file you are about to run
+*Z*Crypt on before using *Z*Crypt.
+
+Long filenames are not supported! The program will accept long filenames
+(with no spaces), but they will be truncated when stored in the encrypted
+file's header. Decrypted filenames will not exceed 12 characters.
+
+I am not a cryptographer. I know next to nothing about the science of
+cryptography. I think my algorithm is relatively secure, but it's possible
+I am completely deluded on this point. The cipher's strong points are
+the length of the key it generates, the fact that the key length has
+a random factor to it (so a cracking program will never know the exact
+cipher key length), and the random number thrown into the mix, which if
+not known where it is stored, makes the same file encrypted twice look
+entirely different when encrypted. For my own use I am confident enough
+in my method, but i can make no guarantees or estimations on its actual
+real security value.
+
+I wrote this program for my own uses and have been using it many months
+now with no problems. I have decided to release it into the public domain
+in case someone else might find it useful for their purposes. As the
+program now does everything i need it to do, it seems unlikely I will
+develop it any further. If it is useful to you as it is then wonderful,
+but don't expect any more versions with new functions, or whatever.
+
+*Z*crypt requires very little memory to operate.
+
+
+
+                        6 * Program Source Code
+
+The program source code included is likely to be completely unusuable. I in
+no way support it! It's a huge Pascal mess. It is bits and pieces of things
+from here and there, and then mangled to get to work with OS/2. I only
+include it so anyone who wants to examine my improvised encryption scheme
+and just to make sure there are no back doors, or secret unlocking
+mechanisms. Some units may be missing from the source code, but the main
+functions (and a lot of junk) are there.
+
+
+                           7 * Email Address
+
+The author, Tim Middleton, can be reached at as544@torfree.net. Please
+drop me a line if you find this program at all useful to you-- or if you
+have any questions, or whatnot.
+
